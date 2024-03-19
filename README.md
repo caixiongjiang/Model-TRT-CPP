@@ -1,12 +1,6 @@
 # Model-TRT-CPP
 
-| 状态 | 任务 |模型 | 推理分辨率 | Pytorch推理 | TensorRT推理 |
-| :-----: | :-----:| :-----: | :------: | :------: | :------: | 
-| <input type="checkbox" > |  | | |  | |
-| <input type="checkbox" > |  | | |  | |
-
-
-
+## Result
 <table>
     <tr>
 	    <th colspan="8">模型推理效果对比</th>
