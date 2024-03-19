@@ -4,7 +4,7 @@
 
 | 状态 | 模型 | 论文 | 分辨率 | Pytorch(FPS) | TensorRT(FPS) |
 | :-----: | :-----:| :-----: | :------: | :------: | :------: | 
-| <input type="checkbox" checked> | ResNet50 | | $224\times 224$ |  | |
-| <input type="checkbox" > | MobileNet | | |  | |
+| &#x2610; | ResNet50 | | $224\times 224$ |  | |
+| &#x2610; | MobileNet | | |  | |
 
 
