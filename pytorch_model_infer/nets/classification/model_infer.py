@@ -44,6 +44,7 @@ class classifyModel:
         assert os.path.exists(imagePath), "Image file : '{}' does not exist.".format(imagePath)
         image = Image.open(imagePath)
         # Preprocess the image
+        # 分类模型默认的推理输入分辨率为224x224
         preprocess = transforms.Compose([
             transforms.Resize(256),
             transforms.CenterCrop(224),

@@ -1,0 +1,22 @@
+# log模块，必填配置项
+LOG: 
+  # 控制台log级别，从低到高包含DEBUG、INFO、WARN、ERROR、CRITICAL，默认为INFO
+  LOG_LEVEL: INFO
+  # log保存路径
+  LOG_FOLDER: ./logs
+  # log文件名称，默认为service.Log
+  LOG_FILENAME: service.log
+  # 日志文件记录的级别个数（1～5），从低到高计数
+  BACKUPCOUNT: 5
+
+MODEL:
+  # 分类模型名称
+  CLASSIFY_MODEL_NAME: "resnet50"
+  # 检测模型路径
+  DETECT_MODEL_NAME: ""
+  # 分割模型名称
+  SEGMENT_MODEL_NAME: ""
+
+SERVER:
+  IP: "0.0.0.0"
+  PORT: 10005
