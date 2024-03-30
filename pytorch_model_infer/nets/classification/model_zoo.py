@@ -8,11 +8,11 @@ class_model_zoo = {
 
 
 class_weight_zoo = {
-    "resnet18": "./data/model_zoo/resnet/resnet18_a3_0-40c531c8.pth",
-    "resnet34": "./data/model_zoo/resnet/resnet34_a3_0-a20cabb6.pth",
-    "resnet50": "./data/model_zoo/resnet/resnet50_a3_0-59cae1ef.pth",
-    "resnet101": "./data/model_zoo/resnet/resnet101_a3_0-1db14157.pth",
-    "resnet152": "./data/model_zoo/resnet/resnet152_a3_0-134d4688.pth"
+    "resnet18": "./data/model_zoo/classification/resnet/resnet18_a3_0-40c531c8.pth",
+    "resnet34": "./data/model_zoo/classification/resnet/resnet34_a3_0-a20cabb6.pth",
+    "resnet50": "./data/model_zoo/classification/resnet/resnet50_a3_0-59cae1ef.pth",
+    "resnet101": "./data/model_zoo/classification/resnet/resnet101_a3_0-1db14157.pth",
+    "resnet152": "./data/model_zoo/classification/resnet/resnet152_a3_0-134d4688.pth"
 }
 
 
