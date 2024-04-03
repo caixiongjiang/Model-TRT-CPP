@@ -8,6 +8,8 @@ import argparse
 from nets.classification.model_infer import classifyModel
 
 
+# TODO:增加TensorRT模型的benchmark测试
+
 def benchmark(model, input, device, repetitions=300):
     # 模型初始化阶段已经进入CUDA设备
     model = model

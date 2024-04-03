@@ -9,13 +9,13 @@
 cd pytorch_model_infer
 pip3 install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
-* docker镜像：
+* 🐳docker镜像：
 ```bash
 ```
 
 ### TensorRT Infer
 
-* docker镜像：
+* 🐳docker镜像：
 ```bash
 
 ```
