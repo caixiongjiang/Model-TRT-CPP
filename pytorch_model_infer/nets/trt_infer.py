@@ -4,7 +4,7 @@ import torch
 import tensorrt as trt 
  
 class TRTWrapper(torch.nn.Module): 
-    def __init__(self,engine: Union[str, trt.ICudaEngine], 
+    def __init__(self, engine: Union[str, trt.ICudaEngine], 
                  output_names: Optional[Sequence[str]] = None) -> None: 
         super().__init__() 
         self.engine = engine 
@@ -20,6 +20,7 @@ class TRTWrapper(torch.nn.Module):
         input_names = list(filter(self.engine.binding_is_input, names)) 
         self._input_names = input_names 
         self._output_names = output_names 
+        self.trt_name = engine.split("/")[-1]
  
         if self._output_names is None: 
             output_names = list(set(names) - set(input_names)) 
