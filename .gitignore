@@ -39,6 +39,7 @@
 *.pt
 *.onnx
 *.trt
+*.npz
 
 # python
 .pytest_cache

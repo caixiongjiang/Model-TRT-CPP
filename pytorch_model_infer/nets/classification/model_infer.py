@@ -17,7 +17,7 @@ class classifyModel:
     """
     支持的模型列表:
     resnet系列: resnet18, resnet34, resnet50, resnet101, resnet152
-
+    vit系列: vit-t, vit-s, vit-l
     """
     def __init__(self, modelName="resnet50"):
         # 检查是否支持模型
@@ -35,7 +35,13 @@ class classifyModel:
         print("Using {} device!".format(self.device))
         self.model.to(self.device) 
         # 加载权重
-        self.model.load_state_dict(torch.load(modelWeightPath, map_location=self.device)) 
+        if modelWeightPath.split("/")[-1].split(".")[-1] == "npz":
+            # 目前只能更改缓存文件的位置来实现本地加载npz权重
+            pretrained_cfg = timm.create_model(class_model_zoo[modelName]).default_cfg
+            pretrained_cfg['file'] = modelWeightPath
+            self.model = timm.create_model(class_model_zoo[modelName], pretrained=True, pretrained_cfg=pretrained_cfg).to(self.device)
+        else:
+            self.model.load_state_dict(torch.load(modelWeightPath, map_location=self.device)) 
         # 推理模式
         self.model.eval()
         self.model_name = modelName

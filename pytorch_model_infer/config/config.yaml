@@ -11,7 +11,7 @@ LOG:
 
 MODEL:
   # 分类模型名称
-  CLASSIFY_MODEL_NAME: "resnet50"
+  CLASSIFY_MODEL_NAME: "vit-t"
   # 检测模型路径
   DETECT_MODEL_NAME: ""
   # 分割模型名称

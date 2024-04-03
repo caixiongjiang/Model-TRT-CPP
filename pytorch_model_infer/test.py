@@ -10,15 +10,11 @@ headers = {
 
 
 if __name__ == "__main__":
-    # model = timm.create_model('resnet18.a3_in1k')
+    # model = timm.create_model('vit_tiny_r_s16_p8_224.augreg_in21k_ft_in1k')
     # print(model.default_cfg)
-    # model = timm.create_model('resnet34.a3_in1k')
+    # model = timm.create_model('vit_small_r26_s32_224.augreg_in21k_ft_in1k')
     # print(model.default_cfg)
-    # model = timm.create_model('resnet50.a3_in1k')
-    # print(model.default_cfg)
-    # model = timm.create_model('resnet101.a3_in1k')
-    # print(model.default_cfg)
-    # model = timm.create_model('resnet152.a3_in1k')
+    # model = timm.create_model('vit_large_r50_s32_224.augreg_in21k_ft_in1k')
     # print(model.default_cfg)
 
     # 上传的图片文件路径

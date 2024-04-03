@@ -34,7 +34,7 @@ def pt2onnx(model_name, classify=False, detect=False, segment=False, simplify=Fa
                         input_names=["input"],    # 输入节点的名称
                         output_names=["output"],  # 输出节点的名称
                         do_constant_folding=True, # 是否执行常量折叠优化
-                        opset_version=11)
+                        opset_version=17)
     print("ONNX 模型已保存到:", onnx_file_path)
 
     if simplify:
@@ -231,6 +231,5 @@ if __name__ == "__main__":
     onnx2trt("resnet50", classify=True, use_simplify=True)
     trt_inference("resnet50", torch.randn(1, 3, 224, 224), classify=True)
     trt_predict("resnet50", "./data/images/cat.jpg", classify=True)
-
 
 
