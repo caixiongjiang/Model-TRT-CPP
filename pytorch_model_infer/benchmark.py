@@ -7,6 +7,7 @@ import argparse
 import ast
 
 from nets.classification.model_infer import classifyModel
+from nets.detection.yolo_infer import YOLO_Inference
 from nets.trt_infer import TRTWrapper
 
 
@@ -103,7 +104,7 @@ if __name__ == '__main__':
     # 添加参数
     parser.add_argument('--modelName', type=str, default='resnet50', help='Model Name')
     parser.add_argument('--mode', type=str, default='torch', choices=['torch', 'trt'], help='Inference mode')
-    parser.add_argument('--input', type=to_tensor, default=(1, 3, 224, 224), help='输入一个张量形状，格式为 (1, 3, 224, 224)')
+    parser.add_argument('--input', type=to_tensor, default=(1, 3, 224, 224), help='输入一个张量形状，格式为 "(1, 3, 224, 224)"')
     parser.add_argument('--type', type=str, default='classify', choices=['classify', 'detect', 'segment'], help='推理的模型类型')
     parser.add_argument('--repetitions', type=int, default=300, help='Number of repetitions')
 
@@ -115,7 +116,7 @@ if __name__ == '__main__':
         if args.type == "classify":
             model = classifyModel(modelName=args.modelName)
         elif args.type == "detect":
-            pass
+            model = YOLO_Inference(modelName=args.modelName)
         elif args.type == "segment":
             pass
         else:

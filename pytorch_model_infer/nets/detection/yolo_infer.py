@@ -15,6 +15,7 @@ class YOLO_Inference():
     """
     支持模型列表：
     yolov5n yolov5s yolov5m yolov5l yolov5x
+    yolov8n yolov8s yolov8m yolov8l yolov8x
     """
 
     def __init__(self, modelName="yolov5s", 
