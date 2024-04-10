@@ -1,8 +1,6 @@
 import logging
 import os
-from datetime import datetime
 from logging.handlers import RotatingFileHandler
-
 
 def make_log(log):
     """
