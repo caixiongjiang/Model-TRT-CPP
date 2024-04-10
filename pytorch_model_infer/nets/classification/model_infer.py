@@ -19,7 +19,7 @@ class classifyModel:
     resnet系列: resnet18, resnet34, resnet50, resnet101, resnet152
     vit系列: vit-t, vit-s, vit-l
     """
-    def __init__(self, modelName="resnet50"):
+    def __init__(self, modelName="resnet50") -> None:
         # 检查是否支持模型
         assert modelName in class_model_zoo, "modelName should be in {}".format(class_model_zoo.keys())
         assert modelName in class_weight_zoo, "modelName should be in {}".format(class_weight_zoo.keys())
@@ -70,9 +70,7 @@ class classifyModel:
     
     def postprocess(self, result, classNameFile):
         _, predicted = torch.max(result.cpu(), 1)
-        with open(classNameFile, "r") as file:
-            lines = file.readlines()
-        imagenet_classes = [line.strip() for line in lines]
+        imagenet_classes, _ = get_classes(classNameFile)
         category_name = imagenet_classes[predicted]
         print(f"类别名称: {category_name}")
 

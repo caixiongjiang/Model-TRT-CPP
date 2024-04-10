@@ -40,6 +40,8 @@
 *.onnx
 *.trt
 *.npz
+*.bin
+*.safetensors
 
 # python
 .pytest_cache

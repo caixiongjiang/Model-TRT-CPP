@@ -10,12 +10,15 @@ LOG:
   BACKUPCOUNT: 5
 
 MODEL:
+  # 模型名称请参考各类模型的model_zoo.py文件以及/data/model_zoo目录下的README文件
   # 分类模型名称
-  CLASSIFY_MODEL_NAME: "vit-t"
+  CLASSIFY_MODEL_NAME: "resnet50"
   # 检测模型路径
-  DETECT_MODEL_NAME: ""
+  DETECT_MODEL_NAME: "yolov8m"
   # 分割模型名称
   SEGMENT_MODEL_NAME: ""
+  # LLM模型名称
+  LLM_MODEL_NAME: "qwen1.5-4b-chat"
 
 SERVER:
   IP: "0.0.0.0"
