@@ -4,10 +4,17 @@ import uuid
 
 
 headers = {
-    "appId": "classification_infer",
+    "appId": "LLM_chat",
     "requestId": str(uuid.uuid4())
 }
 
+def post(url, json, headers):
+    response = requests.post(url, json=json, headers=headers)
+    return response
+
+def streamPost(url, json, headers):
+    response = requests.post(url, json=json, headers=headers, stream=True)
+    return response
 
 if __name__ == "__main__":
     # model = timm.create_model('vit_tiny_r_s16_p8_224.augreg_in21k_ft_in1k')
@@ -19,10 +26,22 @@ if __name__ == "__main__":
 
     # 上传的图片文件路径
     body = {
-        "file_path": "./data/images/cat.jpg"
+        "prompt": "你好,请给我讲一个故事，随便编一个",
+        "system_prompt": ""
     }
+
+    stream_url = "http://localhost:10005/LLM/streamChat"
     # 发送 POST 请求
-    response = requests.post("http://localhost:10005/classification/predict", json=body, headers=headers)
+    stream_response = streamPost(stream_url, json=body, headers=headers)
+
+    for line in stream_response.iter_lines():
+        if line:
+            print(line.decode("utf-8"))
+
+    url = "http://localhost:10005/LLM/chat"
+    # 发送 POST 请求
+    response = post(url, json=body, headers=headers)
+
     # 解析响应
     if response.status_code == 200:
         print("Return:", response.text)

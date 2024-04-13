@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request, Header, HTTPException
 from fastapi.responses import JSONResponse
-from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
+from sse_starlette.sse import EventSourceResponse
 import uvicorn
 import json
 import torch
@@ -30,10 +30,19 @@ app = FastAPI()
 # 创建全局锁，保证同一时间只有一个请求
 global_lock = threading.Lock()
 
+@app.post("/free_gc")
+def free_gc():
+    try:
+        torch_gc("cuda")
+        return {"response": "缓存清理成功"}
+    except Exception as e:
+        logger.error(f"error: {e}")
+        return {"response": "缓存清理失败"}
 
-# 处理POST请求的端点
+
+# LLM chat
 @app.post("/LLM/chat")
-async def create_item(request: Request,
+async def llm_chat(request: Request,
                       app_id: str = Header(None, alias="appId"),
                       request_id: str = Header(None, alias="requestId")):
     try:
@@ -57,16 +66,69 @@ async def create_item(request: Request,
             # 调用模型开始生成
             final_prompt = model.get_prompt(user_message=prompt, system_message=sys_prompt)
             logger.info("Request ID: {}, Info message: 提示词生成成功！".format(request_id))
-            response = model.chat(final_prompt)
+            if "qwen1.5" in model_params["LLM_MODEL_NAME"]:
+                response = model.chat(final_prompt)
+            elif "chatglm3" in model_params["LLM_MODEL_NAME"]:
+                response, _ = model.chat(final_prompt)
             logger.info("Request ID: {}, Info message: 对话生成成功！".format(request_id))
             logger.info("Request ID: {}, Info message: 大模型回答信息：{}".format(request_id, response))
-            # 执行GPU内存清理
-            torch_gc(model.device)
+
             answer = {"response": response, "status": 200}
 
             return answer
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
+    
+
+# LLM streamChat
+@app.post("/LLM/streamChat")
+async def llm_stream_chat(request: Request,
+                          app_id: str = Header(None, alias="appId"),
+                          request_id: str = Header(None, alias="requestId")):
+    def gen_stream(response):
+        logger.info("Request ID: {}, Info message: 流式输出中".format(request_id))
+        generated_content = ""
+        for chunk in response:
+            generated_content += chunk
+            yield json.dumps({"response": chunk}, ensure_ascii=False)
+        logger.info("Request ID: {}, Info message: 大模型回答信息：\n{}".format(request_id, generated_content))
+        yield json.dumps({"response": "[DONE]"}, ensure_ascii=False)
+
+    try:
+        with global_lock:
+            # 检查请求头中的app_id
+            if app_id != "LLM_chat":
+                raise HTTPException(status_code=400, detail="Invalid appId, {}".format(app_id))
+            json_post_raw = await request.json()  # 获取POST请求的JSON数据
+            json_post = json.dumps(json_post_raw)  # 将JSON数据转换为字符串
+            json_post_list = json.loads(json_post)  # 将字符串转换为Python对象
+            logger.info("Request ID: {}, Info message, request info: {}".format(request_id, json_post_list))
+            
+            # 获取请求中的提示
+            prompt = json_post_list.get('prompt')
+            if "system_prompt" in json_post_list.keys():
+                sys_prompt = json_post_list.get('system_prompt')
+            else:
+                sys_prompt = ""
+            logger.info("Request ID: {}, Info message, system prompt: {}, user prompt: {}".format(request_id, sys_prompt, prompt))
+
+            # 调用模型开始生成
+            final_prompt = model.get_prompt(user_message=prompt, system_message=sys_prompt)
+            logger.info("Request ID: {}, Info message: 提示词生成成功！".format(request_id))
+            if "qwen1.5" in model_params["LLM_MODEL_NAME"]:
+                response = model.streamIterChat(final_prompt)
+            elif "chatglm3" in model_params["LLM_MODEL_NAME"]:
+                response, _ = model.chat(final_prompt)
+            logger.info("Request ID: {}, Info message: 对话生成成功！".format(request_id))
+            # logger.info("Request ID: {}, Info message: 大模型回答信息：{}".format(request_id, response))
+
+            return EventSourceResponse(gen_stream(response), media_type="text/event-stream")
+        
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+
+
 
 # 主函数入口
 if __name__ == '__main__':
@@ -75,8 +137,21 @@ if __name__ == '__main__':
     # 加载大模型
     if "qwen1.5" in model_params["LLM_MODEL_NAME"]:
         model = Qwen1_5(model_params["LLM_MODEL_NAME"])
+        # 先推理一遍
+        model.chat(messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": "你好"}
+            ])
     elif "chatglm3" in model_params["LLM_MODEL_NAME"]:
         model = glm3(model_params["LLM_MODEL_NAME"]) 
+        # 先推理一遍
+        model.chat(messages="""
+        <|system|>
+        You are a helpful assistant.
+        <|user|>
+        你好
+        <|assistant|>
+        """)
     else:
         raise ValueError("Model name should be in {}".format(llm_weight_zoo.keys())) 
 

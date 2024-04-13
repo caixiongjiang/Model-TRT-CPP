@@ -18,7 +18,7 @@ MODEL:
   # 分割模型名称
   SEGMENT_MODEL_NAME: ""
   # LLM模型名称
-  LLM_MODEL_NAME: "qwen-1.5-4b-chat"
+  LLM_MODEL_NAME: "qwen1.5-14b-chat"
 
 SERVER:
   IP: "0.0.0.0"

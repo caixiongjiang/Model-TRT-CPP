@@ -1,5 +1,6 @@
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM, TextStreamer, TextIteratorStreamer
+from threading import Thread
 
 import os 
 
@@ -49,3 +50,29 @@ class Qwen1_5():
         response = self.tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
         return response
+
+    def streamChat(self, messages, max_tokens=2048):
+        # 流式输出对话
+        input_ids = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        model_inputs = self.tokenizer([input_ids], return_tensors="pt").to(self.device)
+        streamer = TextStreamer(self.tokenizer, skip_prompt=True, skip_special_tokens=True)
+        generated_ids = self.model.generate(model_inputs.input_ids, max_new_tokens=max_tokens, streamer=streamer)
+        generated_ids = [
+            output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
+        ]
+        response = self.tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
+
+        for chunk in response:
+            yield chunk
+        yield "[DONE]"
+
+    def streamIterChat(self, messages, max_tokens=2048):
+        # 流式输出对话 返回队列
+        input_ids = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        model_inputs = self.tokenizer([input_ids], return_tensors="pt").to(self.device)
+        streamer = TextIteratorStreamer(self.tokenizer, skip_prompt=True, skip_special_tokens=True)
+        generation_kwargs = dict(model_inputs, max_new_tokens=max_tokens, streamer=streamer)
+        thread = Thread(target=self.model.generate, kwargs=generation_kwargs)
+
+        thread.start()
+        yield from streamer
