@@ -94,13 +94,14 @@ class YOLO_Inference():
         if "yolov5" in self.model_name:
             results = self.bbox_util.non_max_suppression(torch.cat(results, 1), self.num_classes, (640, 640), 
                                                         self.image_shape, self.letter_box, conf, iou)
+            top_label   = np.array(results[0][:, 6], dtype='int32')
         elif "yolov8" in self.model_name:
             results = self.bbox_util.non_max_suppression(results, self.num_classes, (640, 640), 
                         self.image_shape, self.letter_box, conf, iou)
+            top_label   = np.array(results[0][:, 5], dtype='int32')
         if results[0] is None:
             results = self.old_image
 
-        top_label   = np.array(results[0][:, 5], dtype='int32')
         top_conf    = results[0][:, 4]
         top_boxes   = results[0][:, :4]
 
@@ -111,6 +112,7 @@ class YOLO_Inference():
         # 图像保存
         if save:
             image.save("detect_result.jpg")
+            print("检测结果图片已经保存在当前目录下!")
         
         return image, top_label, top_conf, top_boxes
 
