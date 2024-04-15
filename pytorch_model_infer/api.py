@@ -9,7 +9,7 @@ import base64
 
 from nets.classification.model_infer import classifyModel
 from nets.detection.yolo_infer import YOLO_Inference
-from utils.utils import *
+from utils.utils import return_config
 from utils.log import make_log
 
 app = FastAPI()
