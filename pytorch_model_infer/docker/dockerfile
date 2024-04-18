@@ -1,0 +1,63 @@
+FROM nvidia/cuda:12.1.0-cudnn8-devel-ubuntu20.04
+# 设置环境变量 非交互式
+ENV DEBIAN_FRONTEND=noninteractive
+# 指定工作目录
+WORKDIR /model_infer
+
+# 替换为阿里云的 Ubuntu 源
+RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list
+RUN sed -i 's/security.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list
+
+# 更新并安装 Python 3.10 和其他必需的包
+RUN apt-get update && apt-get install -y \
+    zlib1g-dev \ 
+    libbz2-dev \
+    libssl-dev \
+    libncurses5-dev \
+    libsqlite3-dev \
+    libreadline-dev \
+    tk-dev \
+    libgdbm-dev \
+    libdb-dev \
+    libpcap-dev \
+    xz-utils \
+    libexpat1-dev \
+    liblzma-dev \
+    libffi-dev \
+    libc6-dev\
+    wget \
+    vim
+
+# 指定容器位置和时区
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
+
+# 安装Python3.10
+RUN cd /usr/local && \
+    wget https://mirrors.huaweicloud.com/python/3.10.0/Python-3.10.0.tgz && \
+    chmod +x Python-3.10.0.tgz && tar -xvf Python-3.10.0.tgz && \
+    rm -rf Python-3.10.0.tgz && cd Python-3.10.0 && \
+    ./configure --prefix=/usr/local/python3 --enable-optimizations && \
+    make && make install && \
+    rm -rf Python-3.10.0 && \
+    ln -s /usr/local/python3/bin/python3.10 /usr/bin/python3 && \
+    ln -s /usr/local/python3/bin/pip3 /usr/bin/pip3
+
+# 替换为清华大学 pip 源
+RUN mkdir -p /root/.pip \
+    && echo "[global]" > /root/.pip/pip.conf \
+    && echo "index-url = https://pypi.tuna.tsinghua.edu.cn/simple" >> /root/.pip/pip.conf \
+    && echo "trusted-host = pypi.tuna.tsinghua.edu.cn" >> /root/.pip/pip.conf
+
+# 安装Pytorch
+RUN python3 -m pip install --upgrade pip && \
+    pip3 install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu121 -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+# 安装相关的包
+RUN pip3 install transformers vllm fastapi sse_starlette timm
+
+# 清除 pip 缓存
+RUN rm -rf /root/.cache/pip
+
+# 设置容器的编码为UTF-8
+RUN echo 'LANG=en_US.UTF-8' > /etc/locale.conf && \
+    echo 'LC_ALL=en_US.UTF-8' >> /etc/locale.conf
