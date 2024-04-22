@@ -19,12 +19,12 @@ class Qwen1_5():
                                                 "model in" + \
                                                 highlight_text("'{}'".format(llm_model_url_zoo[modelName]))
         # 加载分词器
-        self.tokenizer = AutoTokenizer.from_pretrained(modelWeightPath, use_fast=False)
+        self.tokenizer = AutoTokenizer.from_pretrained(modelWeightPath, trust_remote_code=True)
         # 加载模型
-        self.model =  AutoModelForCausalLM.from_pretrained(modelWeightPath, torch_dtype=torch.bfloat16)
+        self.model =  AutoModelForCausalLM.from_pretrained(modelWeightPath, torch_dtype="auto",
+                                                           device_map="auto",
+                                                           trust_remote_code=True)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.model = self.model.to(self.device)
-        self.model.eval()
         self.model_name = modelName
 
     def get_prompt(self, user_message, system_message):
@@ -62,9 +62,7 @@ class Qwen1_5():
         ]
         response = self.tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
-        for chunk in response:
-            yield chunk
-        yield "[DONE]"
+        return response
 
     def streamIterChat(self, messages, max_tokens=2048):
         # 流式输出对话 返回队列

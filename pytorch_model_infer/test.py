@@ -1,7 +1,9 @@
 import timm 
 import requests
 import uuid 
+import json
 
+from utils.utils import return_config
 
 headers = {
     "appId": "LLM_chat",
@@ -24,26 +26,41 @@ if __name__ == "__main__":
     # model = timm.create_model('vit_large_r50_s32_224.augreg_in21k_ft_in1k')
     # print(model.default_cfg)
 
-    # 上传的图片文件路径
-    body = {
-        "prompt": "你好,请给我讲一个故事，随便编一个",
-        "system_prompt": ""
+    log_params, model_params, server_params = return_config()
+    ip = "localhost"
+    port = server_params["PORT"]
+    llm_model_name = server_params["LLM_MODEL_NAME"]
+
+    sys_prompt = """"""
+    
+    prompt = """你好，请给我讲一个故事，随便编一个"""
+
+    # 请求体
+    llm_body = {
+        "prompt": prompt,
+        "system_prompt": sys_prompt
     }
 
-    stream_url = "http://localhost:10005/LLM/streamChat"
+    stream_url = f"http://{ip}:{port}/LLM/streamChat"
     # 发送 POST 请求
-    stream_response = streamPost(stream_url, json=body, headers=headers)
-
+    stream_response = streamPost(stream_url, json=llm_body, headers=headers)
+    
+    full_text = ""
     for line in stream_response.iter_lines():
         if line:
-            print(line.decode("utf-8"))
+            line_str = line.decode("utf-8")
+            print(line_str)
+            data = json.loads(line_str.split(": ", 1)[1])
+            if data["data"] != "[DONE]":
+                full_text += data["data"]
+    print(f"{llm_model_name} 大模型完整回答：\n", full_text)
 
-    url = "http://localhost:10005/LLM/chat"
+    url = f"http://{ip}:{port}/LLM/chat"
     # 发送 POST 请求
-    response = post(url, json=body, headers=headers)
+    response = post(url, json=llm_body, headers=headers)
 
     # 解析响应
     if response.status_code == 200:
-        print("Return:", response.text)
+        print(f"{llm_model_name} 大模型回答：\n", response.text)
     else:
         print("Error:", response.text)

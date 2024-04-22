@@ -9,7 +9,7 @@ import threading
 from nets.LLM.model_zoo import *
 from nets.LLM.qwen1_5 import Qwen1_5
 from nets.LLM.glm3 import glm3
-from utils.utils import *
+from utils.utils import return_config
 from utils.log import make_log
 
 
@@ -118,9 +118,8 @@ async def llm_stream_chat(request: Request,
             if "qwen1.5" in model_params["LLM_MODEL_NAME"]:
                 response = model.streamIterChat(final_prompt)
             elif "chatglm3" in model_params["LLM_MODEL_NAME"]:
-                response, _ = model.chat(final_prompt)
+                response, _ = model.streamIterChat(final_prompt)
             logger.info("Request ID: {}, Info message: 对话生成成功！".format(request_id))
-            # logger.info("Request ID: {}, Info message: 大模型回答信息：{}".format(request_id, response))
 
             return EventSourceResponse(gen_stream(response), media_type="text/event-stream")
         
