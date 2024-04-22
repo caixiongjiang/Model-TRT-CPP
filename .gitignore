@@ -42,6 +42,7 @@
 *.npz
 *.bin
 *.safetensors
+llm_weight/
 
 # python
 .pytest_cache

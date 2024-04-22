@@ -92,8 +92,8 @@ CUDA_VISIBLE_DEVICES={gpu number} streamlit run chat_web.py --server.address 0.0
 
 | 模型 | 单轮对话api | web多轮对话 | 单轮对话流式输出 | vLLM并发 | c++推理 |
 | :-----: | :-----: | :-----: | :------: | :------: | :------: |
-| ChatGLM3系列 | :white_check_mark: | | | |
-| Qwen1.5系列 | :white_check_mark: | | | |
+| ChatGLM3系列 | :white_check_mark: | |  | |
+| Qwen1.5系列 | :white_check_mark: | | :white_check_mark: | |
 
 
 
