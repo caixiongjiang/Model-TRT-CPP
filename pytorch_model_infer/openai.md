@@ -7,8 +7,7 @@
 # --gpu-memory-utilization gpu内存利用率，默认使用0.9
 # --enforce-eager 始终使用渴望模式PyTorch。如果False，将在混合中使用渴望模式和CUDA图，以获得最大的性能和灵活性。(gpu显存不够用的时候强制执行，但是速率会变慢)
 # --max-model-len 模型上下文的最大长度
-# --enable-lora 是否允许lora微调权重
-# --lora-dtype LoRA权重的数据类型
+CUDA_VISIBLE_DEVICES=0 \
 python3 -m vllm.entrypoints.openai.api_server \
 --model ./data/model_zoo/qwen1.5-4b-chat \
 --served-model-name qwen1.5-4b-chat \
@@ -18,9 +17,8 @@ python3 -m vllm.entrypoints.openai.api_server \
 --dtype half \
 --max-num-seqs 256 \
 --gpu-memory-utilization 0.9 \
---enforce-eager True \
---enable-lora True \
---lora-dtype "auto" 
+--lora-dtype="auto" \
+--trust-remote-code
 ```
 
 * Transformers原生接口（流式&&非流式）：

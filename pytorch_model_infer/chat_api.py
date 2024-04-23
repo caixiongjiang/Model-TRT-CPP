@@ -118,7 +118,7 @@ async def llm_stream_chat(request: Request,
             if "qwen1.5" in model_params["LLM_MODEL_NAME"]:
                 response = model.streamIterChat(final_prompt)
             elif "chatglm3" in model_params["LLM_MODEL_NAME"]:
-                response, _ = model.streamIterChat(final_prompt)
+                response = model.streamIterChat(final_prompt)
             logger.info("Request ID: {}, Info message: 对话生成成功！".format(request_id))
 
             return EventSourceResponse(gen_stream(response), media_type="text/event-stream")

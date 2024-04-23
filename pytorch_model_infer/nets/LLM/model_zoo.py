@@ -1,8 +1,8 @@
 llm_weight_zoo = {
-    "chatglm3-6b": "./data/model_zoo/LLM/chatglm3-6b",
-    "qwen1.5-4b-chat": "./data/model_zoo/LLM/qwen1.5-4b-chat",
-    "qwen1.5-7b-chat": "./data/model_zoo/LLM/qwen1.5-7b-chat",
-    "qwen1.5-14b-chat": "./data/model_zoo/LLM/qwen1.5-14b-chat",
+    "chatglm3-6b": "./data/model_zoo/llm_weight/chatglm3-6b",
+    "qwen1.5-4b-chat": "./data/model_zoo/llm_weight/qwen1.5-4b-chat",
+    "qwen1.5-7b-chat": "./data/model_zoo/llm_weight/qwen1.5-7b-chat",
+    "qwen1.5-14b-chat": "./data/model_zoo/llm_weight/qwen1.5-14b-chat",
 }
 
 llm_model_url_zoo = {

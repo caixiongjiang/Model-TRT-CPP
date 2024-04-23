@@ -54,7 +54,7 @@ class glm3():
 
         return response, history
     
-    def streamChat(self, messages, max_length=None, top_p=None, temperature=None, history=[]):
+    def streamChat(self, messages, max_length=None, top_p=None, temperature=None, history=None):
         
         response, history = self.model.stream_chat(self.tokenizer, 
                                                    messages, 
@@ -63,22 +63,19 @@ class glm3():
                                                    top_p=top_p if top_p else 0.7,  # 如果未提供top_p参数，默认使用0.7
                                                    temperature=temperature if temperature else 0.95)  # 如果未提供温度参数，默认使用0.95
 
-        return response, history
+        return response
 
 
-    def streamIterChat(self, messages, max_length=None, top_p=None, temperature=None, history=[]):
-        # TODO：实现流式输出
+    def streamIterChat(self, messages, max_length=None, top_p=None, temperature=None, history=None):
         size = 0
         response = ""
         for response, history in self.model.stream_chat(self.tokenizer, 
                                                         messages, 
                                                         history=history,
-                                                        max_length=max_length if max_length else 2048,  # 如果未提供最大长度，默认使用2048
-                                                        top_p=top_p if top_p else 0.7,  # 如果未提供top_p参数，默认使用0.7
-                                                        temperature=temperature if temperature else 0.95  # 如果未提供温度参数，默认使用0.95
-                                                        ):
+                                                        max_length=max_length if max_length else 2048,
+                                                        top_p=top_p if top_p else 0.7,
+                                                        temperature=temperature if temperature else 0.95):
             chunk = response[size:]
             history = [list(h) for h in history]
             size = len(response)
             yield chunk
-        yield "[DONE]"
