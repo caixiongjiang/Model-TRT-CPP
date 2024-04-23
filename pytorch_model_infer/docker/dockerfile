@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.1.0-cudnn8-devel-ubuntu20.04
+FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
 # 设置环境变量 非交互式
 ENV DEBIAN_FRONTEND=noninteractive
 # 指定工作目录
@@ -48,12 +48,21 @@ RUN mkdir -p /root/.pip \
     && echo "index-url = https://pypi.tuna.tsinghua.edu.cn/simple" >> /root/.pip/pip.conf \
     && echo "trusted-host = pypi.tuna.tsinghua.edu.cn" >> /root/.pip/pip.conf
 
+# 定义 vLLM 版本和 Python 版本环境变量
+ENV VLLM_VERSION=0.4.0.post1 PYTHON_VERSION=310
+
 # 安装Pytorch
 RUN python3 -m pip install --upgrade pip && \
-    pip3 install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu121 -i https://pypi.tuna.tsinghua.edu.cn/simple
+    pip3 install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu118 -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+# 下载特定版本的 vLLM with CUDA 11.8
+RUN curl -L https://github.com/vllm-project/vllm/releases/download/v${VLLM_VERSION}/vllm-${VLLM_VERSION}+cu118-cp${PYTHON_VERSION}-cp${PYTHON_VERSION}-manylinux1_x86_64.whl -o vllm-0.4.0.post1+cu118-cp310-cp310-manylinux1_x86_64.whl
+
+# 使用 pip 安装下载的 vLLM 包
+RUN pip3 install ./vllm-0.4.0.post1+cu118-cp310-cp310-manylinux1_x86_64.whl
 
 # 安装相关的包
-RUN pip3 install transformers vllm fastapi sse_starlette accelerate openai \
+RUN pip3 install transformers fastapi sse_starlette accelerate openai \
     timm onnx onnxruntime-gpu 
 
 # 清除 pip 缓存
