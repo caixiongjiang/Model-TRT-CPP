@@ -61,10 +61,7 @@ CUDA_VISIBLE_DEVICES={gpu number} python3 chat_api.py
 
 #### Chat Web
 
-```bash
-cd pytorch_model_infer
-CUDA_VISIBLE_DEVICES={gpu number} streamlit run chat_web.py --server.address 0.0.0.0 --server.port {your port}
-```
+具体见[chat_web.md](./pytorch_model_infer/chat_web.md)
 
 
 
