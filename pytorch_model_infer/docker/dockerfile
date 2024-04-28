@@ -58,7 +58,7 @@ RUN pip3 install transformers fastapi sse_starlette accelerate \
     timm onnx onnxruntime-gpu onnx-simplifier
 
 # 清除 pip 缓存
-RUN rm -rf /root/.cache/pip
+RUN rm -rf /root/.cache/pip/*
 
 # 设置容器的编码为UTF-8
 RUN echo 'LANG=en_US.UTF-8' > /etc/locale.conf && \

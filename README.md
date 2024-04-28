@@ -16,6 +16,15 @@ docker build -t ${镜像名} .
 # 其中关于vllm和openai的镜像需要单独构建，环境与其他冲突（dockerfile-openai）
 ```
 
+* 启动镜像：
+```bash
+# 克隆项目
+git clone https://github.com/caixiongjiang/Model-TRT-CPP.git
+# 后台运行容器
+docker run -itd -v ${项目路径}:/model_infer \
+-v ${模型权重路径}:/Model-TRT-CPP/pytorch_model_infer/data/model_zoo/${模型文件分类（分类，检测，分割，大模型）}/${模型文件夹名字}
+```
+
 ### C++ 推理
 
 * 🐳docker镜像：

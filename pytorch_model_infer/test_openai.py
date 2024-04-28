@@ -77,7 +77,10 @@ if __name__ == "__main__":
             print(line_str)
             data = json.loads(line_str.split(": ", 1)[1])
             if data["choices"][0]["finish_reason"] != "stop":
-                full_text += data["choices"][0]["delta"]["content"]
+                if data["choices"][0]["delta"].get("content") is not None:
+                    full_text += data["choices"][0]["delta"]["content"]
+                else:
+                    continue
             else:
                 break
     print("大模型完整回答：\n", full_text)
