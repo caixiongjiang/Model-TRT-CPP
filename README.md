@@ -13,6 +13,7 @@ pip3 install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```bash
 cd pytorch_model_infer/docker
 docker build -t ${镜像名} .
+# 其中关于vllm和openai的镜像需要单独构建，环境与其他冲突（dockerfile-openai）
 ```
 
 ### C++ 推理
@@ -85,6 +86,7 @@ CUDA_VISIBLE_DEVICES={gpu number} python3 chat_api.py
 | :-----:| :-----: | :------: | :------: | :------: |
 | Qwen1.5 | [仓库地址](https://github.com/QwenLM/Qwen1.5) | Qwen1.5-7B-Chat |  |  |
 | ChatGLM3 | [仓库地址](https://github.com/THUDM/ChatGLM3) | ChatGLM3-6B |  |  |
+| Llama3 | [仓库地址](https://github.com/THUDM/ChatGLM3) | Llama3-8B-Instruct |  |  |
 
 
 
@@ -104,8 +106,9 @@ CUDA_VISIBLE_DEVICES={gpu number} python3 chat_api.py
 
 | 模型 | 单轮对话api | web多轮对话 | 单轮对话流式输出 | vLLM并发 |
 | :-----: | :-----: | :-----: | :------: | :------: |
-| ChatGLM3系列 | :white_check_mark: | | :white_check_mark: | :white_check_mark: |
-| Qwen1.5系列 | :white_check_mark: | | :white_check_mark: | :white_check_mark: |
+| ChatGLM3系列 | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Qwen1.5系列 | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Llama3系列 | | | | |
 
 
 

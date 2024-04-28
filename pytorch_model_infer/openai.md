@@ -9,7 +9,7 @@
 # --max-model-len 模型上下文的最大长度
 CUDA_VISIBLE_DEVICES=0 \
 python3 -m vllm.entrypoints.openai.api_server \
---model ./data/model_zoo/qwen1.5-4b-chat \
+--model ./data/model_zoo/llm_weight/qwen1.5-4b-chat \
 --served-model-name qwen1.5-4b-chat \
 --host 0.0.0.0 \
 --port 10005 \
