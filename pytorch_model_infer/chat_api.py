@@ -9,6 +9,7 @@ import threading
 from nets.LLM.model_zoo import *
 from nets.LLM.qwen1_5 import Qwen1_5
 from nets.LLM.glm3 import glm3
+from nets.LLM.llama3 import Llama3
 from utils.utils import return_config
 from utils.log import make_log
 
@@ -43,8 +44,8 @@ def free_gc():
 # LLM chat
 @app.post("/LLM/chat")
 async def llm_chat(request: Request,
-                      app_id: str = Header(None, alias="appId"),
-                      request_id: str = Header(None, alias="requestId")):
+                   app_id: str = Header(None, alias="appId"),
+                   request_id: str = Header(None, alias="requestId")):
     try:
         with global_lock:
             # 检查请求头中的app_id
@@ -70,6 +71,8 @@ async def llm_chat(request: Request,
                 response = model.chat(final_prompt)
             elif "chatglm3" in model_params["LLM_MODEL_NAME"]:
                 response, _ = model.chat(final_prompt)
+            elif "llama3" in model_params["LLM_MODEL_NAME"]:
+                response = model.chat(final_prompt)
             logger.info("Request ID: {}, Info message: 对话生成成功！".format(request_id))
             logger.info("Request ID: {}, Info message: 大模型回答信息：{}".format(request_id, response))
 
@@ -119,6 +122,8 @@ async def llm_stream_chat(request: Request,
                 response = model.streamIterChat(final_prompt)
             elif "chatglm3" in model_params["LLM_MODEL_NAME"]:
                 response = model.streamIterChat(final_prompt)
+            elif "llama3" in model_params["LLM_MODEL_NAME"]:
+                response = model.streamIterChat(final_prompt)
             logger.info("Request ID: {}, Info message: 对话生成成功！".format(request_id))
 
             return EventSourceResponse(gen_stream(response), media_type="text/event-stream")
@@ -151,6 +156,13 @@ if __name__ == '__main__':
         你好
         <|assistant|>
         """)
+    elif "llama3" in model_params["LLM_MODEL_NAME"]:
+        model = Llama3(model_params["LLM_MODEL_NAME"])
+        # 先推理一遍
+        model.chat(messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": "你好"}
+            ])
     else:
         raise ValueError("Model name should be in {}".format(llm_weight_zoo.keys())) 
 
