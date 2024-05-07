@@ -54,8 +54,9 @@ RUN python3 -m pip install --upgrade pip && \
     pip3 install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://mirror.sjtu.edu.cn/pytorch-wheels/cu118
 
 # 安装相关的包
-RUN pip3 install transformers fastapi sse_starlette accelerate \
-    timm onnx onnxruntime-gpu onnx-simplifier
+RUN pip3 install transformers fastapi sse_starlette accelerate sentencepiece \
+    timm onnx onnxruntime-gpu onnx-simplifier \
+    thop opencv-python
 
 # 清除 pip 缓存
 RUN rm -rf /root/.cache/pip/*

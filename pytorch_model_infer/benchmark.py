@@ -8,6 +8,7 @@ import ast
 
 from nets.classification.model_infer import classifyModel
 from nets.detection.yolo_infer import YOLO_Inference
+from nets.segmentation.model_infer import segmentModel
 from nets.trt_infer import TRTWrapper
 
 
@@ -118,7 +119,7 @@ if __name__ == '__main__':
         elif args.type == "detect":
             model = YOLO_Inference(modelName=args.modelName)
         elif args.type == "segment":
-            pass
+            model = segmentModel(modelName=args.modelName)
         else:
             raise ValueError("暂不支持当前的任务相关的模型")
         # 创建一个随机输入

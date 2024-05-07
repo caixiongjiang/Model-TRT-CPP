@@ -25,9 +25,9 @@ class classifyModel:
         assert modelName in class_weight_zoo, "modelName should be in {}".format(class_weight_zoo.keys())
         modelWeightPath = class_weight_zoo[modelName]
         # 检查本地是否下载模型
-        assert os.path.exists(modelWeightPath), "Model weight file: {}".format(modelWeightPath) + \
-                                                " does not exist.\n Please download {}".format(modelName) + \
-                                                "model in" + \
+        assert os.path.exists(modelWeightPath), "Model weight file: {} ".format(modelWeightPath) + \
+                                                "does not exist.\n Please download {} ".format(modelName) + \
+                                                "model in " + \
                                                 highlight_text("'{}'".format(class_model_url_zoo[modelName]))
         # 加载模型
         self.model = timm.create_model(class_model_zoo[modelName])

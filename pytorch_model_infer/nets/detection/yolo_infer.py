@@ -3,6 +3,7 @@ import torch
 from PIL import Image
 import numpy as np
 import colorsys
+import copy
 from thop import profile
 
 from .yolov5.yolov5 import Yolov5
@@ -25,9 +26,9 @@ class YOLO_Inference():
         assert modelName in detect_weight_zoo, "modelName should be in {}".format(detect_weight_zoo.keys())
         modelWeightPath = detect_weight_zoo[modelName]
         # 检查本地是否下载模型
-        assert os.path.exists(modelWeightPath), "Model weight file: {}".format(modelWeightPath) + \
-                                                " does not exist.\n Please download {} ".format(modelName) + \
-                                                "model in" + \
+        assert os.path.exists(modelWeightPath), "Model weight file: {} ".format(modelWeightPath) + \
+                                                "does not exist.\n Please download {} ".format(modelName) + \
+                                                "model in " + \
                                                 highlight_text("'{}'".format(detect_model_url_zoo[modelName]))
         # 读取anchors配置
         assert os.path.exists(anchors_path), "Anchors file: {} does not exist!".format(anchors_path)
@@ -71,7 +72,7 @@ class YOLO_Inference():
         self.letter_box = letter_box
         # 对灰度图像的处理
         image = cvtColor(image)
-        self.old_image = image
+        self.old_image = copy.deepcopy(image)
         # 对图片进行resize, 默认使用640x640的图片
         image_data = resize_image(image, (640, 640), letter_box)
         # 1. /255  2. W, H, C -> C, W, H  3. 添加batch

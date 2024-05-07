@@ -88,6 +88,7 @@ CUDA_VISIBLE_DEVICES={gpu number} python3 chat_api.py
 | Vision Transformer系列 | [论文地址](https://arxiv.org/pdf/2010.11929.pdf) | ViT-T | $224\times 224$ |  |  |
 | YOLOv5系列 | [仓库地址](https://github.com/ultralytics/yolov5) | yolov5s | $640\times 640$ |  |  |
 | YOLOv8系列 | [仓库地址](https://github.com/ultralytics/ultralytics) | yolov8m | $640\times 640$ |  |  |
+| FastSegFormer系列 | [仓库地址](https://github.com/caixiongjiang/FastSegFormer) | FastSegFormer-P12 | $224\times 224$ |  |  |
 
 * LLM: 
 
@@ -110,6 +111,7 @@ CUDA_VISIBLE_DEVICES={gpu number} python3 chat_api.py
 | ViT系列 | :white_check_mark: | :white_check_mark: | :white_check_mark: | | |
 | YOLOv5系列 | :white_check_mark: | :white_check_mark: | :white_check_mark: | | |
 | YOLOv8系列 | :white_check_mark: | :white_check_mark: | :white_check_mark: | | |
+| FastSegFormer系列 | :white_check_mark: | :white_check_mark: | :white_check_mark: |  |  | 
 
 * LLM:
 
@@ -117,7 +119,7 @@ CUDA_VISIBLE_DEVICES={gpu number} python3 chat_api.py
 | :-----: | :-----: | :-----: | :------: | :------: |
 | ChatGLM3系列 | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | Qwen1.5系列 | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| Llama3系列 | | | | |
+| Llama3系列 | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
 
 

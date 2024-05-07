@@ -16,7 +16,7 @@ MODEL:
   # 检测模型路径
   DETECT_MODEL_NAME: "yolov8m"
   # 分割模型名称
-  SEGMENT_MODEL_NAME: ""
+  SEGMENT_MODEL_NAME: "FastSegFormer-P12"
   # LLM模型名称
   LLM_MODEL_NAME: "qwen1.5-4b-chat"
 

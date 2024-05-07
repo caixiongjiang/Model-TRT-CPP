@@ -1,7 +1,9 @@
 import argparse
 import torch
+
 from nets.classification.model_infer import classifyModel
 from nets.detection.yolo_infer import YOLO_Inference
+from nets.segmentation.model_infer import segmentModel
 
 
 if __name__ == '__main__':
@@ -27,6 +29,8 @@ if __name__ == '__main__':
         model.predict(args.imagePath, save=True)
         model.count_params_flops(torch.randn(1, 3, 640, 640))
     elif args.type == "segment":
-        pass
+        model = segmentModel(modelName=args.modelName)
+        model.predict(args.imagePath, classNameFile=args.classNameFile, legend=True, save=True)
+        model.count_params_flops(torch.randn(1, 3, 224, 224))
     else:
         raise ValueError("暂不支持当前的任务相关的模型")
