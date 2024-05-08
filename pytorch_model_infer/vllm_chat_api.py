@@ -12,6 +12,7 @@ import torch
 from nets.LLM.model_zoo import *
 from nets.LLM.vllm_glm3 import vllmChatGLM3
 from nets.LLM.vllm_qwen1_5 import vllmQwen1_5
+from nets.LLM.vllm_llama3 import vllmLlama3
 from utils.utils import return_config
 from utils.log import make_log
 
@@ -70,6 +71,8 @@ async def llm_chat(request: Request,
             response = model.chat(final_prompt)
         elif "chatglm3" in model_params["LLM_MODEL_NAME"]:
             response = model.chat(final_prompt)
+        elif "llama3" in model_params["LLM_MODEL_NAME"]:
+            response = model.chat(final_prompt)
 
         logger.info("Request ID: {}, Info message: 对话生成成功！".format(request_id))
         logger.info("Request ID: {}, Info message: 大模型回答信息：{}".format(request_id, response))
@@ -97,6 +100,13 @@ if __name__ == '__main__':
         model = vllmChatGLM3(model_params["LLM_MODEL_NAME"]) 
         # 先推理一遍
         model.chat(messages="""<|system|>You are a helpful assistant.<|user|>你好<|assistant|>""")
+    elif "llama3" in model_params["LLM_MODEL_NAME"]:
+        model = vllmLlama3(model_params["LLM_MODEL_NAME"])
+        # 先推理一遍
+        model.chat(messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": "你好"}
+            ])
     else:
         raise ValueError("Model name should be in {}".format(llm_weight_zoo.keys())) 
 

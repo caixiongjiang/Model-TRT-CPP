@@ -9,7 +9,7 @@ from .model_zoo import *
 from .utils import highlight_text
 
 
-class vllmChatGLM3():
+class vllmLlama3():
     def __init__(self, modelName) -> None:
         # 检查是否支持模型
         assert modelName in llm_weight_zoo, "modelName should be in {}".format(llm_weight_zoo.keys())
@@ -21,7 +21,7 @@ class vllmChatGLM3():
                                                 highlight_text("'{}'".format(llm_model_url_zoo[modelName]))
         # 加载分词器
         self.tokenizer = AutoTokenizer.from_pretrained(modelWeightPath)
-        # 加载模型 Tesla T4需要使用float16
+        # 加载模型 Tesla T4需要使用float16 tokenizer=None会默认使用配套的标记器
         self.model = LLM(model=modelWeightPath, tokenizer=None, 
                          dtype="auto", trust_remote_code=True,
                          max_model_len=2048)

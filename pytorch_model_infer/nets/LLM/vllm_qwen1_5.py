@@ -8,17 +8,16 @@ import os
 from .model_zoo import *
 from .utils import highlight_text
 
-# TODO：统一为openai接口的返回形式
 
 class vllmQwen1_5():
-    def __init__(self, modelName="qwen1.5-4b-chat") -> None:
+    def __init__(self, modelName) -> None:
         # 检查是否支持模型
         assert modelName in llm_weight_zoo, "modelName should be in {}".format(llm_weight_zoo.keys())
         modelWeightPath = llm_weight_zoo[modelName]
         # 检查本地是否下载模型
-        assert os.path.exists(modelWeightPath), "Model weight file: {}".format(modelWeightPath) + \
-                                                " does not exist.\n Please download {} ".format(modelName) + \
-                                                "model in" + \
+        assert os.path.exists(modelWeightPath), "Model weight file: {} ".format(modelWeightPath) + \
+                                                "does not exist.\n Please download {} ".format(modelName) + \
+                                                "model in " + \
                                                 highlight_text("'{}'".format(llm_model_url_zoo[modelName]))
         # 加载分词器
         self.tokenizer = AutoTokenizer.from_pretrained(modelWeightPath)

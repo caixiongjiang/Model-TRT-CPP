@@ -9,14 +9,14 @@ from .utils import highlight_text
 
 
 class Qwen1_5():
-    def __init__(self, modelName="qwen1.5-4b-chat") -> None:
+    def __init__(self, modelName) -> None:
         # 检查是否支持模型
         assert modelName in llm_weight_zoo, "modelName should be in {}".format(llm_weight_zoo.keys())
         modelWeightPath = llm_weight_zoo[modelName]
         # 检查本地是否下载模型
-        assert os.path.exists(modelWeightPath), "Model weight file: {}".format(modelWeightPath) + \
-                                                " does not exist.\n Please download {} ".format(modelName) + \
-                                                "model in" + \
+        assert os.path.exists(modelWeightPath), "Model weight file: {} ".format(modelWeightPath) + \
+                                                "does not exist.\n Please download {} ".format(modelName) + \
+                                                "model in " + \
                                                 highlight_text("'{}'".format(llm_model_url_zoo[modelName]))
         # 加载分词器
         self.tokenizer = AutoTokenizer.from_pretrained(modelWeightPath, trust_remote_code=True)
@@ -39,11 +39,13 @@ class Qwen1_5():
 
         return messages
 
-    def chat(self, messages, max_tokens=2048):
+    def chat(self, messages, max_tokens=2048, temperature=0.6, top_p=0.9):
         # 调用模型进行对话生成
         input_ids = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         model_inputs = self.tokenizer([input_ids], return_tensors="pt").to(self.device)
-        generated_ids = self.model.generate(model_inputs.input_ids, max_new_tokens=max_tokens)
+        generated_ids = self.model.generate(model_inputs.input_ids, max_new_tokens=max_tokens,
+                                            temperature=temperature,
+                                            top_p=top_p)
         generated_ids = [
             output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
         ]
@@ -51,12 +53,15 @@ class Qwen1_5():
 
         return response
 
-    def streamChat(self, messages, max_tokens=2048):
+    def streamChat(self, messages, max_tokens=2048, temperature=0.6, top_p=0.9):
         # 流式输出对话
         input_ids = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         model_inputs = self.tokenizer([input_ids], return_tensors="pt").to(self.device)
         streamer = TextStreamer(self.tokenizer, skip_prompt=True, skip_special_tokens=True)
-        generated_ids = self.model.generate(model_inputs.input_ids, max_new_tokens=max_tokens, streamer=streamer)
+        generated_ids = self.model.generate(model_inputs.input_ids, max_new_tokens=max_tokens,
+                                            temperature=temperature,
+                                            top_p=top_p, 
+                                            streamer=streamer)
         generated_ids = [
             output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
         ]
@@ -64,12 +69,15 @@ class Qwen1_5():
 
         return response
 
-    def streamIterChat(self, messages, max_tokens=2048):
-        # 流式输出对话 返回队列
+    def streamIterChat(self, messages, max_tokens=2048, temperature=0.6, top_p=0.9):
+        # 流式输出对话迭代器
         input_ids = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         model_inputs = self.tokenizer([input_ids], return_tensors="pt").to(self.device)
         streamer = TextIteratorStreamer(self.tokenizer, skip_prompt=True, skip_special_tokens=True)
-        generation_kwargs = dict(model_inputs, max_new_tokens=max_tokens, streamer=streamer)
+        generation_kwargs = dict(model_inputs, max_new_tokens=max_tokens,
+                                 temperature=temperature,
+                                 top_p=top_p, 
+                                 streamer=streamer)
         thread = Thread(target=self.model.generate, kwargs=generation_kwargs)
 
         thread.start()
