@@ -56,7 +56,7 @@ RUN python3 -m pip install --upgrade pip && \
 # 安装相关的包
 RUN pip3 install transformers fastapi sse_starlette accelerate sentencepiece \
     timm onnx onnxruntime-gpu onnx-simplifier \
-    thop opencv-python
+    thop opencv-python Pillow
 
 # 清除 pip 缓存
 RUN rm -rf /root/.cache/pip/*
