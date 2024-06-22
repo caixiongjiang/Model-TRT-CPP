@@ -3,6 +3,8 @@ from typing import Union, Optional, Sequence, Dict, Any
 import torch 
 import tensorrt as trt 
  
+# TODO:支持YOLOv5和v8的TRT推理适配
+
 class TRTWrapper(torch.nn.Module): 
     def __init__(self, engine: Union[str, trt.ICudaEngine], 
                  output_names: Optional[Sequence[str]] = None) -> None: 
